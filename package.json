@@ -1,0 +1,28 @@
+{
+  "name": "school",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "description": "School",
+  "author": {
+    "name": "SnowSea"
+  },
+  "dependencies": {
+    "basic-auth": "^1.1.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.0",
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "gravatar": "^1.6.0",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.9.2",
+    "morgan": "^1.7.0",
+    "nodemailer": "^3.1.8",
+    "pug": "^2.0.0-beta6",
+    "randomstring": "^1.1.5",
+    "serve-favicon": "^2.3.0"
+  }
+}

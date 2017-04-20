@@ -1,0 +1,25 @@
+﻿body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.purchase_result {
+    color: #DC5041;
+    font-size: 72px;
+}
+
+.btn {
+    background: #DC5041;
+    border: 2px solid #DC5041;
+    color: #fff;
+}
+
+.btn:hover {
+    background: none;
+    border: 2px solid #DC5041;
+    color: #fff;
+}
