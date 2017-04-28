@@ -12,13 +12,13 @@ const questionSchema = mongoose.Schema({
         user_id: String,
         title: String,
         content: String,
-        created_at: Date
+        created_at: String
     },
     is_answered: Boolean,
     answer: {
         user_id: String,
         content: String,
-        created_at: Date
+        created_at: String
     }
 
 });
