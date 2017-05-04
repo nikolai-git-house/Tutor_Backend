@@ -10,9 +10,7 @@ const students = require('./functions/student/student');
 const api_routes = require('./routes/api/index');
 const users = require('./routes/api/user');
 const user_helper = require('./helpers/user');
-
 const app = express();
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,9 +27,7 @@ require('./models/mongo_connect');
 
 app.use('/api/users', users);
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/api/students/purchaseSuccess/:id', (req, res) => {
+/*app.get('/api/students/purchaseSuccess/:id', (req, res) => {
 
     const id = req.params['id'];
 
@@ -53,18 +49,18 @@ app.get('/api/students/purchaseFailure/:id', (req, res) => {
 
         .catch(err => res.status(err.status).json(null));
 
-});
+});*/
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
-
-    if (user_helper.checkToken(req) == true) {
-
-        next();
-    } else {
-
-        res.status(401).json({message: "Invalid Token"});
+    if (req.path != "/admin/login" && user_helper.checkToken(req) == false) {
+        return res.redirect('/admin/login');
     }
+    next();
 });
+
+
 
 app.use('/api', api_routes);
 

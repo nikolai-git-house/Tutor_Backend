@@ -40,7 +40,11 @@ exports.register = (email, password, user_info) =>
 
             .then(() => newUserDetail.save())
 
-            .then(() => resolve({ status: 201, message: 'User Registered Sucessfully !' }))
+            .then(() => {
+                return user.find({ email: email });
+            })
+
+            .then((users)=>resolve({ status: 201, message: 'User Registered Sucessfully !', user: users[0] }))
 
             .catch(err => {
 

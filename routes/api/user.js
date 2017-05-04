@@ -6,6 +6,7 @@ const register = require('../../functions/user/register');
 const login = require('../../functions/user/login');
 const config = require('../../config/config.json');
 const helper = require('../../helpers/user');
+const user = require('../../functions/user/user');
 
 var router = express.Router();
 
@@ -48,8 +49,14 @@ router.post('/register', (req, res) => {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         country: req.body.country,
-        phone_number: req.body.phone_number
+        phone_number: req.body.phone_number,
+        user_type: req.body.user_type
     };
+
+    if (info.user_type === undefined) {
+        info.user_type = 0;
+    }
+
     const email = req.body.email;
     const password = req.body.password;
 
@@ -65,7 +72,7 @@ router.post('/register', (req, res) => {
             .then(result => {
 
                 res.setHeader('Location', '/' + email);
-                res.status(result.status).json({ message: result.message })
+                res.status(result.status).json({ message: result.message, user: result.user })
             })
 
             .catch(err => {
@@ -83,6 +90,51 @@ router.get('/:id', (req, res) => {
 
             .then(result => res.json(result))
 
+            .catch(err => res.status(err.status).json({ message: err.message }));
+
+    } else {
+
+        res.status(401).json({ message: 'Invalid Token !' });
+    }
+});
+
+router.get('/users/:type', (req, res) => {
+
+    if (helper.checkToken(req)) {
+
+        const type = req.params.type;
+        user.getUsers(type)
+            .then(result => res.json(result))
+            .catch(err => res.status(err.status).json({ message: err.message }));
+
+    } else {
+
+        res.status(401).json({ message: 'Invalid Token !' });
+    }
+});
+
+router.get('/delete/:id', (req, res) => {
+
+    if (helper.checkToken(req)) {
+
+        const id = req.params.id;
+        user.deleteUser(id)
+            .then(result => res.json(result))
+            .catch(err => res.status(err.status).json({ message: err.message }));
+
+    } else {
+
+        res.status(401).json({ message: 'Invalid Token !' });
+    }
+});
+
+router.post('/update', (req, res) => {
+
+    if (helper.checkToken(req)) {
+
+        const info = req.body.user_info;
+        user.updateUser(info)
+            .then(result => res.json(result))
             .catch(err => res.status(err.status).json({ message: err.message }));
 
     } else {
