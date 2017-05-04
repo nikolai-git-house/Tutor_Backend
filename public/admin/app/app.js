@@ -59,10 +59,6 @@ app.config(function($routeProvider) {
         templateUrl : "pages/users/students.html",
         controller : "studentsController"
     })
-    .when("/contact/aboutus", {
-        templateUrl : "pages/contact/aboutus.html",
-        controller : "studentsController"
-    });
 });
 
 app.service('dataService', function() {
