@@ -689,6 +689,8 @@ app.controller("subjectsController", function ($scope, $http, dataService) {
 					$scope.selectedLevelIndex = 0;
 					$scope.selectedLevelNumber = $scope.levels[0].number.toString();
 
+					$scope.changeLevel();
+
         }, function myError(response) {
           alert(response.statusText);
       });
