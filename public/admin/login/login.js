@@ -4,8 +4,8 @@ var app = angular.module("loginApp", []);
 
 app.controller("loginController", function ($scope, $http, $window) {
 
-  this.email = "admin@gmail.com";
-  this.password = "snowsea";
+  this.email = "";
+  this.password = "";
 
   this.onLoad = function() {
 
