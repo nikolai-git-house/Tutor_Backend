@@ -41,7 +41,7 @@
               <td>{{user.user_info.phone_number}}</td>
               <td>
                 <a class="btn" data-toggle="modal" data-target="#addDialog" ng-click="onUpdate(user._id)"> <i class="fa fa-edit text-blue"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#myModal"> <i class="fa fa-file text-green"></i></a>
+                <a class="btn" href="#users/assignedSubjects" ng-click="admin.onAssignedSubject(user)"> <i class="fa fa-file text-green"></i></a>
                 <a class="btn" data-toggle="modal" data-target="#myModal" ng-click="onSelect(user._id)"> <i class="fa fa-remove text-red"></i></a>
               </td>
             </tr>
@@ -79,8 +79,8 @@
         <p>Do you want delete the user?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline" data-dismiss="modal">Delete</button>
-        <button type="button" class="btn btn-outline">Cancel</button>
+        <button type="button" class="btn btn-outline" ng-click="delete()" data-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
       </div>
     </div>
     <!-- /.modal-content -->

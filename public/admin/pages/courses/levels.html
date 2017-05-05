@@ -20,7 +20,7 @@
         <div class="box-body">
           <div class="form-group">
             <label>Course</label>
-            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" ng-model="selectedCourseID" ng-change="changeCourse()" convert-to-number>
+            <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" ng-model="selectedCourseID" ng-change="changeCourse()">
               <option ng-repeat="course in courses" value={{course._id}}>{{course.name}}</option>
             </select>
             <!-- <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2-lttd-container"><span class="select2-selection__rendered" id="select2-lttd-container" title="Alabama">Alabama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span> -->
@@ -108,7 +108,7 @@
         <div class="box-body">
           <div class="form-group">
             <label for="number">Number</label>
-            <input type="number" class="form-control" id="email" placeholder="Number" ng-model="input.number">
+            <input type="number" class="form-control" id="number" placeholder="Number" ng-model="input.number">
           </div>
           <div class="form-group">
             <label for="name">Level Name</label>

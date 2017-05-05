@@ -55,6 +55,10 @@ app.config(function($routeProvider) {
         templateUrl : "pages/users/lecturers.html",
         controller : "lecturersController"
     })
+		.when("/users/assignedSubjects", {
+        templateUrl : "pages/users/assignedSubjects.html",
+        controller : "assignedSubjectsController"
+    })
     .when("/users/students", {
         templateUrl : "pages/users/students.html",
         controller : "studentsController"
@@ -83,6 +87,16 @@ app.controller("adminController", function ($scope, dataService) {
   this.onLoadFinish = function() {
 
   }
+
+	this.signOut = function() {
+		localStorage.setItem("token", undefined);
+		localStorage.setItem("id", undefined);
+		window.location.href = "/admin/login/"
+	}
+
+	this.onAssignedSubject = function(user) {
+		dataService.lecturer = user;
+	}
 
 	this.data = dataService;
 });
@@ -213,7 +227,7 @@ app.controller("administratorsController", function ($scope, $http, dataService)
 		$scope.onUpdate = function(id) {
 			$scope.onSelect(id);
 			var info = $scope.adminUsers[$scope.selectedIndex];
-			console.log(info);
+
 			$scope.input.email = info.email;
 			$scope.input.lastName = info.user_info.last_name;
 			$scope.input.firstName = info.user_info.first_name;
@@ -338,7 +352,7 @@ app.controller("lecturersController", function ($scope, $http, dataService) {
 		$scope.onUpdate = function(id) {
 			$scope.onSelect(id);
 			var info = $scope.lecturers[$scope.selectedIndex];
-			console.log(info);
+
 			$scope.input.email = info.email;
 			$scope.input.lastName = info.user_info.last_name;
 			$scope.input.firstName = info.user_info.first_name;
@@ -380,7 +394,7 @@ app.controller("lecturersController", function ($scope, $http, dataService) {
     }
 
 		$scope.update = function() {
-			console.log("update");
+
 			var data = {
 				id: $scope.input.id,
 				email: $scope.input.email,
@@ -435,8 +449,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
       $http.get("/api/courses", dataService.authHeader)
         .then(function(response) {
           var res = response.data;
-          dataService.courses = res;
-          $scope.courses = dataService.courses;
+          $scope.courses = res;
 					$scope.selectedCourseID = $scope.courses[0]._id;
 					$scope.selectedCourseIndex = 0;
 					$scope.levels = $scope.courses[0].levels;
@@ -472,7 +485,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
       $http.post("/api/courses/levels/delete", {data: data}, dataService.authHeader)
         .then(function(response) {
 					$scope.levels.splice($scope.selectedIndex, 1);
-					console.log($scope.selectedIndex);
+
           var res = response.data;
           alert(res.message);
 
@@ -486,7 +499,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
 			for (var i = 0; i < $scope.courses.length; i++) {
 				if ($scope.courses[i]._id == $scope.selectedCourseID) {
 					$scope.selectedCourseIndex = i;
-					$scope.levels = $scope.courses[i];
+					$scope.levels = $scope.courses[i].levels;
 					break;
 				}
 			}
@@ -506,6 +519,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
     }
 
     $scope.newLevel = function() {
+			console.log($scope.levels.length);
       $scope.input = {
 				number: $scope.levels.length
 			};
@@ -513,7 +527,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
     }
 
 		$scope.update = function() {
-			console.log("update");
+
 			var data = {
 				course_id: $scope.selectedCourseID,
 				old_number: $scope.selectedId,
@@ -548,7 +562,7 @@ app.controller("levelsController", function ($scope, $http, dataService) {
           $scope.levels.push({
 						number: $scope.input.number,
 	          name: $scope.input.name});
-					console.log(res.course);
+
           alert("Operation has done successfully !");
 
         }, function myError(response) {
@@ -585,11 +599,11 @@ app.controller("coursesController", function ($scope, $http, dataService) {
 		$scope.onUpdate = function(id) {
 			$scope.onSelect(id);
 			var info = $scope.courses[$scope.selectedIndex];
-			console.log(info);
+
 			$scope.input.number = info.number;
 			$scope.input.name = info.name;
 			$scope.input.isAvailable = info.is_available;
-			console.log(info.is_available);
+
 			$scope.input.id = $scope.selectedID;
 		}
 
@@ -622,12 +636,13 @@ app.controller("coursesController", function ($scope, $http, dataService) {
     $scope.newCourse = function() {
       $scope.input = {
 				id: undefined,
+				number: $scope.courses.length,
 				isAvailable: true
 			};
     }
 
 		$scope.update = function() {
-			console.log("update");
+
 			var data = {
 				id: $scope.input.id,
 				number: $scope.input.number,
@@ -649,7 +664,7 @@ app.controller("coursesController", function ($scope, $http, dataService) {
 		}
 
     $scope.add = function() {
-			console.log($scope.input.isAvailable);
+
       var data = {
         number: $scope.input.number,
         name: $scope.input.name,
@@ -661,7 +676,7 @@ app.controller("coursesController", function ($scope, $http, dataService) {
           var res = response.data;
 
           $scope.courses.push(res.course);
-					console.log(res.course);
+
           alert("Operation has done successfully !");
 
         }, function myError(response) {
@@ -722,7 +737,7 @@ app.controller("subjectsController", function ($scope, $http, dataService) {
         .then(function(response) {
 
 					$scope.subjects.splice($scope.selectedIndex, 1);
-					console.log($scope.selectedIndex);
+
           var res = response.data;
           alert(res.message);
 
@@ -736,13 +751,22 @@ app.controller("subjectsController", function ($scope, $http, dataService) {
 			for (var i = 0; i < $scope.courses.length; i++) {
 				if ($scope.courses[i]._id == $scope.selectedCourseID) {
 					$scope.selectedCourseIndex = i;
-					$scope.levels = $scope.courses[i];
+					$scope.levels = $scope.courses[i].levels;
+
+					$scope.selectedLevelIndex = 0;
+					if ($scope.levels.length != 0)
+						$scope.selectedLevelNumber = $scope.levels[0].number.toString();
+					$scope.changeLevel();
 					break;
 				}
 			}
 		}
 
 		$scope.changeLevel = function() {
+			if ($scope.levels == undefined || $scope.levels.length == 0) {
+				$scope.subjects = [];
+				return;
+			}
 			for (var i = 0; i < $scope.levels.length; i++) {
 				if ($scope.levels[i].number == $scope.selectedLevelNumber) {
 					$scope.selectedLevelIndex = i;
@@ -894,12 +918,22 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
 				if ($scope.courses[i]._id == $scope.selectedCourseID) {
 					$scope.selectedCourseIndex = i;
 					$scope.levels = $scope.courses[i];
+					$scope.selectedLevelIndex = 0;
+					if ($scope.levels.length == 0)
+						$scope.selectedLevelNumber = $scope.levels[0].number;
+					$scope.changeLevel();
 					break;
 				}
 			}
 		}
 
 		$scope.changeLevel = function() {
+			if ($scope.levels == undefined || $scope.levels.length == 0) {
+				$scope.subjects = [];
+				$scope.chapters = [];
+				$scope.selectedLevelNumber = undefined;
+				return;
+			}
 			for (var i = 0; i < $scope.levels.length; i++) {
 				if ($scope.levels[i].number == $scope.selectedLevelNumber) {
 					$scope.selectedLevelIndex = i;
@@ -912,17 +946,39 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
           var res = response.data;
           $scope.subjects = res;
 					$scope.selectedSubjectIndex = 0;
-					$scope.selectedSubjectID = $scope.subjects[0]._id;
-					$scope.chapters = $scope.subjects[0].chapters;
+					if ($scope.subjects.length != 0) {
+						$scope.selectedSubjectID = $scope.subjects[0]._id;
+					}
+					$scope.changeSubject();
         }, function myError(response) {
           alert(response.statusText);
       });
 		}
 
+		$scope.changeSubject = function() {
+			if ($scope.subjects == undefined || $scope.subjects.length == 0) {
+				$scope.chapters = [];
+				$scope.selectedSubjectID = undefined;
+				return;
+			}
+			for (var i = 0; i < $scope.subjects.length; i++) {
+				if ($scope.subjects[i]._id == $scope.selectedSubjectID) {
+					$scope.selectedLevelIndex = i;
+					$scope.chapters = $scope.subjects[i].chapters;
+					break;
+				}
+			}
+		}
+
     $scope.input = {
+
     };
 
     $scope.save = function() {
+			if ($scope.selectedCourseID == undefined || $scope.selectedLevelNumber == undefined || $scope.selectedSubjectID == undefined) {
+				alert("Please selected subject !");
+				return;
+			}
 
       if ($scope.mode == "add") {
         $scope.add();
@@ -933,8 +989,9 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
     }
 
     $scope.newChapter = function() {
+
       $scope.input = {
-				number: $scope.subjects.length
+				number: $scope.chapters.length
 			};
 			$scope.mode = "add"
     }
@@ -993,8 +1050,225 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
     }
 });
 
-app.controller("studentsController", function ($scope) {
-    $scope.onLoad = function() {
+app.controller("assignedSubjectsController", function ($scope, $http, $window, dataService) {
+	$scope.onLoad = function() {
 
-    }
+		$scope.user = dataService.lecturer;
+		if ($scope.user == undefined) {
+			$window.location.href = "#users/lecturers"
+			return;
+		}
+
+		$scope.subjectInfo = [];
+
+		$http.get("/api/courses", dataService.authHeader)
+			.then(function(response) {
+				var res = response.data;
+				$scope.courses = res;
+
+				$http.get("/api/lecturers/" + $scope.user.email, dataService.authHeader)
+					.then(function(response) {
+						var res = response.data;
+						$scope.assignedSubjects = res.subjects;
+
+						for (var i = 0; i < $scope.assignedSubjects.length; i++) {
+							const assignedSubject = $scope.assignedSubjects[i];
+							$scope.subjectInfo.push({
+								courseIndex: $scope.getCourseIndex(assignedSubject.course_number),
+								levelIndex: $scope.getLevelIndex(assignedSubject.course_number, assignedSubject.level_number),
+								subjectNumber: assignedSubject.number,
+								name: assignedSubject.name
+							});
+						}
+
+					}, function myError(response) {
+						alert(response.statusText);
+				});
+
+			}, function myError(response) {
+				alert(response.statusText);
+		});
+
+		$scope.subjects = [];
+	}
+
+	$scope.getCourseIndex = function(courseNumber) {
+		for (var i = 0; i < $scope.courses.length; i++) {
+			if ($scope.courses[i].number == courseNumber) {
+				return i;
+			}
+		}
+	}
+
+	$scope.getLevelIndex = function(courseNumber, levelNumber) {
+
+		const levels = $scope.courses[courseNumber].levels;
+		for (var i = 0; i < levels.length; i++) {
+			if (levels[i].number == levelNumber) {
+				return i;
+			}
+		}
+	}
+
+	$scope.onSelect = function(course_number, level_number, subject_number) {
+
+		console.log(subject_number + " onSelect");
+		$scope.selectedCourseNumber = course_number;
+		$scope.selectedLevelNumber = level_number;
+		$scope.selectedCourseIndex = $scope.getCourseIndex($scope.selectedCourseNumber);
+		$scope.selectedLevelIndex = $scope.getLevelIndex($scope.selectedCourseNumber, $scope.selectedLevelNumber);
+		$scope.selectedSubjectNumber = subject_number;
+		console.log($scope.selectedSubjectNumber);
+	}
+
+	$scope.onUpdate = function(id) {
+		$scope.onSelect(id);
+		$scope.mode = "update";
+		var info = $scope.adminUsers[$scope.selectedIndex];
+
+		$scope.input.email = info.email;
+		$scope.input.lastName = info.user_info.last_name;
+		$scope.input.firstName = info.user_info.first_name;
+		$scope.input.country = info.user_info.country;
+		$scope.input.phoneNumber = info.user_info.phone_number;
+		$scope.input.id = $scope.selectedID;
+	}
+
+	$scope.delete = function() {
+		var data = {
+			user_id: $scope.user.email,
+			course_number: $scope.selectedCourseNumber,
+			level_number: $scope.selectedLevelNumber,
+			subject_number: $scope.selectedSubjectNumber
+		};
+		console.log(data);
+
+		$http.post("/api/lecturers/delete", {data: data}, dataService.authHeader)
+			.then(function(response) {
+				var res = response.data;
+				for (var i = 0; i < $scope.subjectInfo.length; i++) {
+
+					const info = $scope.subjectInfo[i];
+					if (info.courseIndex == $scope.selectedCourseIndex && info.levelIndex == $scope.selectedLevelIndex && info.subjectNumber == $scope.selectedSubjectNumber) {
+						$scope.subjectInfo.splice(i, 1);
+						break;
+					}
+				}
+				alert("Operation has done successfully !");
+			}, function myError(response) {
+				alert(response.statusText);
+		});
+	}
+
+	$scope.save = function() {
+
+		if ($scope.mode = "add") {
+			$scope.add();
+		}
+		else {
+			$scope.update();
+		}
+	}
+
+	$scope.newSubject = function() {
+		$scope.mode = "add";
+		$scope.selectedCourseIndex = 0;
+		$scope.selectedCourseNumber = $scope.courses[$scope.selectedCourseIndex].number.toString();
+		$scope.changeCourse();
+	}
+
+	$scope.changeCourse = function() {
+		for (var i = 0; i < $scope.courses.length; i++) {
+			if ($scope.courses[i].number == $scope.selectedCourseNumber) {
+				$scope.selectedCourseIndex = i;
+				$scope.levels = $scope.courses[i].levels;
+				$scope.selectedLevelIndex = 0;
+				$scope.selectedLevelNumber = $scope.levels[$scope.selectedLevelIndex].number.toString();
+				$scope.changeLevel();
+				break;
+			}
+		}
+	}
+
+	$scope.changeLevel = function() {
+		for (var i = 0; i < $scope.levels.length; i++) {
+			if ($scope.levels[i].number == $scope.selectedLevelNumber) {
+				$scope.selectedLevelIndex = i;
+				break;
+			}
+		}
+
+		$http.get("/api/courses/" + $scope.courses[$scope.selectedCourseIndex].number + "/" + $scope.selectedLevelNumber + "/subjects", dataService.authHeader)
+			.then(function(response) {
+				var res = response.data;
+				$scope.subjects = res;
+				$scope.selectedSubjectIndex = 0;
+				$scope.selectedSubjectNumber = $scope.subjects[0].number.toString();
+				$scope.changeSubject();
+			}, function myError(response) {
+				alert(response.statusText);
+		});
+	}
+
+	$scope.changeSubject = function() {
+		for (var i = 0; i < $scope.subjects.length; i++) {
+			if ($scope.subjects[i].number == $scope.selectedSubjectNumber) {
+				$scope.selectedSubjectIndex = i;
+				break;
+			}
+		}
+	}
+
+	$scope.update = function() {
+
+		/*var data = {
+			id: $scope.input.id,
+			email: $scope.input.email,
+			first_name: $scope.input.firstName,
+			last_name: $scope.input.lastName,
+			country: $scope.input.country,
+			phone_number: $scope.input.phoneNumber,
+			password: $scope.input.password,
+		};
+
+
+		$http.post("/api/users/update", {user_info: data}, dataService.authHeader)
+			.then(function(response) {
+				var res = response.data;
+				$scope.adminUsers[$scope.selectedIndex].email = $scope.input.email;
+				$scope.adminUsers[$scope.selectedIndex].user_info.first_name = $scope.input.firstName;
+				$scope.adminUsers[$scope.selectedIndex].user_info.last_name = $scope.input.lastName;
+				$scope.adminUsers[$scope.selectedIndex].user_info.country = $scope.input.country;
+				$scope.adminUsers[$scope.selectedIndex].user_info.phone_number = $scope.input.phoneNumber;
+
+				alert("Operation has done successfully !");
+			}, function myError(response) {
+				alert(response.statusText);
+		});*/
+	}
+
+	$scope.add = function() {
+		var data = {
+			user_id: $scope.user.email,
+			course_number: $scope.selectedCourseNumber,
+			level_number: $scope.selectedLevelNumber,
+			subject_number: $scope.selectedSubjectNumber,
+			name: $scope.subjects[$scope.selectedSubjectIndex].name
+		};
+		console.log(data);
+
+		$http.post("/api/lecturers/assign", {data: data}, dataService.authHeader)
+			.then(function(response) {
+				var res = response.data;
+				$scope.subjectInfo.push({
+					courseIndex: $scope.selectedCourseIndex,
+					levelIndex: $scope.selectedLevelIndex,
+					subjectNumber: $scope.selectedSubjectNumber,
+					name: data.name
+				});
+				alert("Operation has done successfully !");
+			}, function myError(response) {
+				alert(response.statusText);
+		});
+	}
 });
