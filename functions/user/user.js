@@ -1,5 +1,6 @@
 const user = require('../../models/user');
 const bcrypt = require('bcrypt-nodejs');
+const lecturer = require('../../models/lecturer');
 
 exports.getUsers = (userType) =>
 
@@ -25,7 +26,25 @@ exports.deleteUser = (id) =>
                     reject({ status: 404, message: 'User Not Found !' });
                 }
 
-                users[0].remove();
+                const user = users[0];
+                if (user.user_info.user_type == 1) {
+                    lecturer.find({ user_id: user.email })
+
+                        .then(lecturers => {
+
+                            if (lecturers.length == 0) {
+
+                                reject({ status: 404, message: 'User Not Found !' });
+                            }
+
+                            lecturers[0].remove();
+                            return;
+                        })
+                }
+            })
+
+            .then(() => {
+                user.remove();
             })
 
             .then(() => resolve({ status: 200, message: 'Operation has done successfully !' }))

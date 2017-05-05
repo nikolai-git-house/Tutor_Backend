@@ -24,6 +24,28 @@ module.exports.getLecturer = (user_id) =>
 
     });
 
+module.exports.deleteLecturer = (user_id) =>
+
+    new Promise((resolve, reject) => {
+
+        lecturer.find({ user_id: user_id })
+
+            .then(lecturers => {
+
+                if (lecturers.length == 0) {
+
+                    reject({ status: 404, message: 'User Not Found !' });
+                }
+
+                lecturers[0].remove();
+            })
+
+            .then(() => resolve({ status: 200, message: 'Operation has done successfully !' }))
+
+            .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
+
+    });
+
 module.exports.assignSubject = (data) =>
 
     new Promise((resolve, reject) => {

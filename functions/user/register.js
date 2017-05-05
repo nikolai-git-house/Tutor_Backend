@@ -25,7 +25,7 @@ exports.register = (email, password, user_info) =>
                 user_id: email,
                 subjects: []
             });
-        } else {
+        } else if (user_info.user_type == 0) {
 
             newUserDetail = new student({
                 user_id: email,
