@@ -1031,6 +1031,11 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
 				note_url: $scope.input.noteUrl
   		};
 
+			if (data.video_url == undefined) data.video_url = "";
+			if (data.note_url == undefined) data.note_url = "";
+
+			console.log(data);
+
       $http.post("/api/courses/chapters/add", {data: data}, dataService.authHeader)
         .then(function(response) {
           var res = response.data;
