@@ -1012,8 +1012,8 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
 					var res = response.data;
 					$scope.chapters[$scope.selectedIndex].number = $scope.input.number;
 					$scope.chapters[$scope.selectedIndex].name = $scope.input.name;
-					$scope.chapters[$scope.selectedIndex].videoUrl = $scope.input.video_url;
-					$scope.chapters[$scope.selectedIndex].noteUrl = $scope.input.note_url;
+					$scope.chapters[$scope.selectedIndex].video_url = $scope.input.videoUrl;
+					$scope.chapters[$scope.selectedIndex].note_url = $scope.input.noteUrl;
 
 					alert(res.message);
 				}, function myError(response) {
