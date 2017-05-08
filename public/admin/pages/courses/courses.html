@@ -30,7 +30,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="course in courses" repeat-end="admin.onLoadFinish()">
+            <tr ng-repeat="course in courses">
               <td>{{course.number}}</td>
               <td>{{course.name}}</td>
               <td class="col-xs-1 col-sm-2">{{course.is_available == true? "Open" : "Coming soon"}}</td>

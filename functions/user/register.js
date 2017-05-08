@@ -10,13 +10,13 @@ exports.register = (email, password, user_info) =>
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
+        if (user_info.user_type == undefined) user_info.user_type = 0;
         const newUser = new user({
             email: email,
             user_info: user_info,
             hashed_password: hash,
             created_at: new Date()
         });
-
 
         var newUserDetail;
         if (user_info.user_type == 1) {

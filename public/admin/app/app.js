@@ -85,7 +85,7 @@ app.controller("adminController", function ($scope, dataService) {
   })();
 
   this.onLoadFinish = function() {
-
+		$("#example1").DataTable();
   }
 
 	this.signOut = function() {
@@ -318,9 +318,17 @@ app.controller("administratorsController", function ($scope, $http, dataService)
     }
 });
 
-app.controller("chaptertsController", function ($scope) {
-    $scope.onLoad = function() {
+app.controller("studentsController", function ($scope, $http, dataService) {
 
+    $scope.onLoad = function() {
+      $http.get("/api/users/users/0", dataService.authHeader)
+        .then(function(response) {
+          var res = response.data;
+          $scope.students = res;
+
+        }, function myError(response) {
+          alert(response.statusText);
+      });
     }
 });
 

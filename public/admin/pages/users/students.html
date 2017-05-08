@@ -17,7 +17,6 @@
       <div class="box">
         <div class="box-header">
           <h3 class="box-title">Students</h3>
-          <button type="button" class="btn btn-sm pull-right bg-green" data-toggle="modal" data-target="#addDialog"><i class="fa fa-user"></i> Add New User</button>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -29,58 +28,16 @@
               <th>Last Name</th>
               <th>Country</th>
               <th>Phone Number</th>
-              <th> </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>student@gmail.com</td>
-              <td>John
-              </td>
-              <td>Amir</td>
-              <td>UAE</td>
-              <td>123-456-7890</td>
-              <td>
-                <a class="btn" data-toggle="modal" data-target="#addDialog"> <i class="fa fa-edit text-blue"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#myModal"> <i class="fa fa-remove text-red"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>student@gmail.com</td>
-              <td>John
-              </td>
-              <td>Amir</td>
-              <td>UAE</td>
-              <td>123-456-7890</td>
-              <td>
-                <a class="btn" data-toggle="modal" data-target="#addDialog"> <i class="fa fa-edit text-blue"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#myModal"> <i class="fa fa-remove text-red"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>student@gmail.com</td>
-              <td>John
-              </td>
-              <td>Amir</td>
-              <td>UAE</td>
-              <td>123-456-7890</td>
-              <td>
-                <a class="btn" data-toggle="modal" data-target="#addDialog"> <i class="fa fa-edit text-blue"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#myModal"> <i class="fa fa-remove text-red"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>student@gmail.com</td>
-              <td>John
-              </td>
-              <td>Amir</td>
-              <td>UAE</td>
-              <td>123-456-7890</td>
-              <td>
-                <a class="btn" data-toggle="modal" data-target="#addDialog"> <i class="fa fa-edit text-blue"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#myModal"> <i class="fa fa-remove text-red"></i></a>
-              </td>
-            </tr>
+              <tr ng-repeat="user in students" repeat-end="admin.onLoadFinish()">
+                <td>{{user.email}}</td>
+                <td>{{user.user_info.first_name}}</td>
+                <td>{{user.user_info.last_name}}</td>
+                <td>{{user.user_info.country}}</td>
+                <td>{{user.user_info.phone_number}}</td>
+              </tr>
             </tbody>
             <tfoot>
             <tr>
@@ -89,7 +46,6 @@
               <th>Last Name</th>
               <th>Country</th>
               <th>Phone Number</th>
-              <th> </th>
             </tr>
             </tfoot>
           </table>
@@ -102,76 +58,3 @@
   </div>
   <!-- /.row -->
 </section>
-
-<div class="modal modal-danger"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">Danger Modal</h4>
-      </div>
-      <div class="modal-body">
-        <p>Do you want delete the user?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" data-dismiss="modal">Delete</button>
-        <button type="button" class="btn btn-outline">Cancel</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-<div class="modal modal-danger"  id="addDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog">
-    <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Student</h3>
-      </div>
-      <!-- /.box-header -->
-      <!-- form start -->
-      <form role="form">
-        <div class="box-body">
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">First Name</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="First Name">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Last Name</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Last Name">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Country</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Country">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Phone Number</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Phone Number">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Phone Number</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Phone Number</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
-          </div>
-        </div>
-        <!-- /.box-body -->
-
-        <div class="box-footer">
-          <div class="pull-right">
-            <button type="button" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
