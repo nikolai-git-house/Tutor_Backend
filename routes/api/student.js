@@ -21,14 +21,14 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/prepare_purchase/:course_number/:level_number/:subject_number', (req, res) => {
+router.get('/checkout_id/:course_number/:level_number/:subject_number', (req, res) => {
 
     const user_id = req.headers['id'];
     const course_number = req.params['course_number']
     const level_number = req.params['level_number'];
     const subject_number = req.params['subject_number'];
 
-    students.getPaymentInfo(user_id, course_number, level_number, subject_number)
+    students.getCheckoutID(user_id, course_number, level_number, subject_number)
 
         .then(result => res.status(200).json({ id: result, receiver: config.account_id }))
 

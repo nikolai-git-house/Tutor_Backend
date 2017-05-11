@@ -16,7 +16,7 @@ module.exports.getStudent = (user_id) =>
 
     });
 
-module.exports.getPaymentInfo = (user_id, course_number, level_number, subject_number) =>
+module.exports.getCheckoutID = (user_id, course_number, level_number, subject_number) =>
 
     new Promise((resolve, reject) => {
 
