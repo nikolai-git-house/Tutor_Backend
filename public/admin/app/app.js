@@ -884,8 +884,8 @@ app.controller("chaptersController", function ($scope, $http, dataService) {
     $scope.onSelect = function(id) {
       $scope.selectedID = id;
       $scope.selectedIndex = 0;
-      for (var i = 0; i < $scope.subjects.length; i++) {
-        if ($scope.subjects[i]._id == id) {
+      for (var i = 0; i < $scope.chapters.length; i++) {
+        if ($scope.chapters[i].number == id) {
           $scope.selectedIndex = i;
           break;
         }
