@@ -21,16 +21,13 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/checkout_id/:course_number/:level_number/:subject_number', (req, res) => {
+router.get('/checkout_id/:price', (req, res) => {
 
-    const user_id = req.headers['id'];
-    const course_number = req.params['course_number']
-    const level_number = req.params['level_number'];
-    const subject_number = req.params['subject_number'];
+    const price = req.params['price'];
 
-    students.getCheckoutID(user_id, course_number, level_number, subject_number)
+    students.getCheckoutID(price, 'EUR')
 
-        .then(result => res.status(200).json({ id: result, receiver: config.account_id }))
+        .then(result => res.status(200).json({ id: result.id }))
 
         .catch(err => res.status(err.status).json(null));
 
