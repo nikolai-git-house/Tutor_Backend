@@ -27,30 +27,6 @@ require('./models/mongo_connect');
 
 app.use('/api/users', users);
 
-/*app.get('/api/students/purchaseSuccess/:id', (req, res) => {
-
-    const id = req.params['id'];
-
-    students.purchaseSuccess(id)
-
-        .then(result => res.render('purchase_success', { title: 'Express' }))
-
-        .catch(err => res.status(err.status).json(null));
-
-});
-
-app.get('/api/students/purchaseFailure/:id', (req, res) => {
-
-    const id = req.params['id'];
-
-    students.purchaseFailure(id)
-
-        .then(result => res.render('purchase_failure', { title: 'Express' }))
-
-        .catch(err => res.status(err.status).json(null));
-
-});*/
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {

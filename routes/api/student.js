@@ -21,13 +21,44 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/checkout_id/:price', (req, res) => {
+router.get('/checkout/id/:price', (req, res) => {
 
-    const price = req.params['price'];
+    var price = req.params['price'];
+    price = Number(price).toFixed(2);
 
-    students.getCheckoutID(price, 'EUR')
+    students.getCheckoutID(price, 'ZAR')
 
-        .then(result => res.status(200).json({ id: result.id }))
+        .then(result => {
+            res.status(200).json({ id: result.id })
+        })
+
+        .catch(err => res.status(err.status).json(null));
+
+});
+
+router.post('/checkout/success', (req, res) => {
+
+    const id = req.headers['id'];
+    const course_number = req.body["course_number"];
+    const level_number = req.body["level_number"];
+    const subject_number = req.body["number"];
+
+    students.purchaseSuccess(id, course_number, level_number, subject_number)
+
+        .then(result => res.json(result))
+
+        .catch(err => res.status(err.status).json(null));
+
+});
+
+router.get('/checkout/status/:id', (req, res) => {
+
+    const user_id = req.headers['id'];
+    const checkout_id = req.params['id'];
+
+    students.getCheckoutStatus(checkout_id)
+
+        .then(result => res.json(result))
 
         .catch(err => res.status(err.status).json(null));
 

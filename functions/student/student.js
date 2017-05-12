@@ -23,14 +23,14 @@ module.exports.getCheckoutID = (price, currency) =>
     new Promise((resolve, reject) => {
         var path = '/v1/checkouts';
         var data = querystring.stringify({
-            'authentication.userId': '8a8294174b7ecb28014b9699220015cc',
-            'authentication.password': 'sy6KJsT8',
-            'authentication.entityId': '8a8294174b7ecb28014b9699220015ca',
+            'authentication.userId': config.payment_user_id,
+            'authentication.password': config.payment_password,
+            'authentication.entityId': config.payment_entity_id,
             'amount': price,
             'currency': currency,
             'paymentType': 'DB',
             'shopperResultUrl': 'my.app://custom/url',
-            'notificationUrl': 'http://www.example.com/notify'
+            'notificationUrl': 'http://192.168.1.114/notify'
         });
         var options = {
             port: 443,
@@ -51,65 +51,52 @@ module.exports.getCheckoutID = (price, currency) =>
         });
         postRequest.write(data);
         postRequest.end();
-    });
+    })
+        .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 
-module.exports.purchaseSuccess = (id) =>
+module.exports.getCheckoutStatus = (id) =>
+    new Promise((resolve, reject) => {
+        var path = '/v1/checkouts/' + id + '/payment';
+        path += '?authentication.userId=' + config.payment_user_id
+        path += '&authentication.password=' + config.payment_password
+        path += '&authentication.entityId=' + config.payment_entity_id
+        var options = {
+            port: 443,
+            host: 'test.oppwa.com',
+            path: path,
+            method: 'GET',
+        };
+        var postRequest = http.request(options, function (res) {
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+                const jsonRes = JSON.parse(chunk);
+                resolve(jsonRes.result);
+            });
+        });
+        postRequest.end();
+    })
+    .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
+
+module.exports.purchaseSuccess = (user_id, course_number, level_number, subject_number) =>
 
     new Promise((resolve, reject) => {
 
-        var pay = null;
-
-        purchase.find({ _id: id })
-
-            .then(purchases => {
-
-                pay = purchases[0];
-
-                return student.find({ user_id: pay.user_id });
-
-            })
+        student.find({ user_id: user_id })
 
             .then(students => {
 
                 let student = students[0];
                 student.paid_subjects.push({
-                    course_number: pay.course_number,
-                    level_number: pay.level_number,
-                    subject_number: pay.subject_number
+                    course_number: course_number,
+                    level_number: level_number,
+                    subject_number: subject_number
                 });
 
                 student.save();
-
-                return pay.remove();
             })
         
-            .then(() => resolve({ status: 200, message: 'Paid successfully' }))
+            .then((student) => resolve({ status: 200, message: 'Paid successfully' }))
 
             .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 
     });
-
-module.exports.purchaseFailure = (id) =>
-
-    new Promise((resolve, reject) => {
-
-        purchase.find({ _id: id })
-
-            .then(purchases => {
-
-                if (purchases.length != 0) {
-
-                    let purchase = purchases[0];
-                    return purchase.remove();
-                }
-                else {
-                    reject({ status: 500, message: 'Internal Server Error !' });
-                }
-            })
-
-            .then(() => resolve({ status: 200, message: 'Paid Failure!'}))
-
-            .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
-
-    });
-
