@@ -29,8 +29,8 @@ module.exports.getCheckoutID = (price, currency) =>
             'amount': price,
             'currency': currency,
             'paymentType': 'DB',
-            'shopperResultUrl': 'my.app://custom/url',
-            'notificationUrl': 'http://192.168.1.114/notify'
+            'shopperResultUrl': 'school.snowsea.com://shopper_result',
+            'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
         });
         var options = {
             port: 443,
