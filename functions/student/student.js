@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const querystring = require('querystring');
 const config = require('../../config/config.json');
 const http = require('https');
+const user = require('../../models/user');
 
 module.exports.getStudent = (user_id) =>
 
@@ -19,40 +20,53 @@ module.exports.getStudent = (user_id) =>
 
     });
 
-module.exports.getCheckoutID = (price, currency) =>
+module.exports.getCheckoutID = (user_id, price) =>
     new Promise((resolve, reject) => {
-        var path = '/v1/checkouts';
-        var data = querystring.stringify({
-            'authentication.userId': config.payment_user_id,
-            'authentication.password': config.payment_password,
-            'authentication.entityId': config.payment_entity_id,
-            'amount': price,
-            'currency': currency,
-            'paymentType': 'DB',
-            'shopperResultUrl': 'school.snowsea.com://shopper_result',
-            'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
-        });
-        var options = {
-            port: 443,
-            host: 'test.oppwa.com',
-            path: path,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': data.length
-            }
-        };
-        var postRequest = http.request(options, function (res) {
-            res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-                var jsonRes = JSON.parse(chunk);
-                resolve(jsonRes);
-            });
-        });
-        postRequest.write(data);
-        postRequest.end();
+        user.find({ 'email': user_id })
+
+            .then(users => {
+                if (users.length == 0) {
+                    reject({ status: 404, message: 'User Not Found !' });
+                }
+                const user = users[0];
+                var path = '/v1/checkouts';
+                var data = querystring.stringify({
+                    'authentication.userId': config.payment_user_id,
+                    'authentication.password': config.payment_password,
+                    'authentication.entityId': config.payment_entity_id,
+                    'amount': price,
+                    'currency': 'ZAR',
+                    'paymentType': 'DB',
+                    'customer.givenName': user.user_info.first_name,
+                    'customer.surName': user.user_info.last_name,
+                    'customer.email': user.email,
+                    'shopperResultUrl': 'com.snowsea.school.payments://shopper_result',
+                    'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
+                });
+                var options = {
+                    port: 443,
+                    host: 'test.oppwa.com',
+                    path: path,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Length': data.length
+                    }
+                };
+                var postRequest = http.request(options, function (res) {
+                    res.setEncoding('utf8');
+                    res.on('data', function (chunk) {
+                        var jsonRes = JSON.parse(chunk);
+                        resolve(jsonRes);
+                    });
+                });
+                postRequest.write(data);
+                postRequest.end();
+            })
+            .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
+        
     })
-        .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
+        
 
 module.exports.getCheckoutStatus = (id) =>
     new Promise((resolve, reject) => {

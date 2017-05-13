@@ -5,7 +5,6 @@ const user_helper = require('../../helpers/user');
 const students = require('../../functions/student/student');
 const config = require('../../config/config.json');
 
-
 var router = express.Router();
 
 router.get('/', (req, res) => {
@@ -25,8 +24,9 @@ router.get('/checkout/id/:price', (req, res) => {
 
     var price = req.params['price'];
     price = Number(price).toFixed(2);
+    const user_id = req.headers['id'];
 
-    students.getCheckoutID(price, 'ZAR')
+    students.getCheckoutID(user_id, price)
 
         .then(result => {
             res.status(200).json({ id: result.id })
