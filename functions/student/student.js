@@ -38,7 +38,7 @@ module.exports.getCheckoutID = (user_id, price) =>
                     'currency': 'ZAR',
                     'paymentType': 'DB',
                     'customer.givenName': user.user_info.first_name,
-                    'customer.surName': user.user_info.last_name,
+                    'customer.surname': user.user_info.last_name,
                     'customer.email': user.email,
                     'shopperResultUrl': 'com.snowsea.school.payments://shopper_result',
                     'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
@@ -64,8 +64,8 @@ module.exports.getCheckoutID = (user_id, price) =>
                 postRequest.end();
             })
             .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
-        
-    })
+
+    });
         
 
 module.exports.getCheckoutStatus = (id) =>
