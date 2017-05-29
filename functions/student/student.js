@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const config = require('../../config/config.json');
 const http = require('https');
 const user = require('../../models/user');
+const randomstring = require("randomstring");
 
 module.exports.getStudent = (user_id) =>
 
@@ -40,6 +41,7 @@ module.exports.getCheckoutID = (user_id, price) =>
                     'customer.givenName': user.user_info.first_name,
                     'customer.surname': user.user_info.last_name,
                     'customer.email': user.email,
+                    'merchantTransactionId ': randomstring.generate(),
                     'shopperResultUrl': 'com.snowsea.school.payments://shopper_result',
                     'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
                 });
