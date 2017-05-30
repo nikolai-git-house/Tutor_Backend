@@ -38,10 +38,16 @@ module.exports.getCheckoutID = (user_id, price) =>
                     'amount': price,
                     'currency': 'ZAR',
                     'paymentType': 'DB',
+                    'merchantTransactionId': randomstring.generate(55),
                     'customer.givenName': user.user_info.first_name,
                     'customer.surname': user.user_info.last_name,
                     'customer.email': user.email,
-                    'merchantTransactionId ': randomstring.generate(),
+                    'shipping.street1': 'Main Street',
+                    'shipping.street2': '',
+                    'shipping.city': 'Johannesburg',
+                    'shipping.state': '',
+                    'shipping.postcode': '2000',
+                    'shipping.country': 'ZA',
                     'shopperResultUrl': 'com.snowsea.school.payments://shopper_result',
                     'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
                 });
