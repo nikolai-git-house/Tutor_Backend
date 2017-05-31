@@ -52,7 +52,8 @@ module.exports.getCheckoutID = (user_id, price) =>
                     'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
                 });
                 var options = {
-                    host: 'https://oppwa.com/',
+                    port: 443,
+                    host: 'oppwa.com',
                     path: path,
                     method: 'POST',
                     headers: {
@@ -82,7 +83,8 @@ module.exports.getCheckoutStatus = (id) =>
         path += '&authentication.password=' + config.payment_password
         path += '&authentication.entityId=' + config.payment_entity_id
         var options = {
-            host: 'https://oppwa.com/',
+            port: 443,
+            host: 'oppwa.com',
             path: path,
             method: 'GET',
         };
