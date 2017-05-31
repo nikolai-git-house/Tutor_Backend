@@ -53,7 +53,7 @@ module.exports.getCheckoutID = (user_id, price) =>
                 });
                 var options = {
                     port: 443,
-                    host: 'test.oppwa.com',
+                    host: 'oppwa.com',
                     path: path,
                     method: 'POST',
                     headers: {
@@ -84,7 +84,7 @@ module.exports.getCheckoutStatus = (id) =>
         path += '&authentication.entityId=' + config.payment_entity_id
         var options = {
             port: 443,
-            host: 'test.oppwa.com',
+            host: 'oppwa.com',
             path: path,
             method: 'GET',
         };
