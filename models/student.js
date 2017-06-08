@@ -8,7 +8,9 @@ const studentSchema = mongoose.Schema({
     paid_subjects: [{
         course_number: Number,
         level_number: Number,
-        subject_number: Number
+        subject_number: Number,
+        date: Date,
+        remain_date: Number
     }]
 });
 

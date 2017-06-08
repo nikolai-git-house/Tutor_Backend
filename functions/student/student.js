@@ -15,7 +15,35 @@ module.exports.getStudent = (user_id) =>
 
         student.find({ user_id: user_id })
 
-            .then(students => resolve(students[0]))
+            .then(students => {
+                if (students.length == 0) {
+                    reject({ status: 404, message: 'User Not Found !' });
+                }
+
+                var student = students[0];
+                var subjects = student.paid_subjects;
+                var expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() + 365);
+                var newSubjects = [];
+                for (var i = 0; i < subjects.length; i++) {
+                    if (subjects[i].date < expireDate) {
+                        newSubjects.push(subjects[i]);
+                    }
+                }
+                student.paid_subjects = newSubjects;
+                return student.save();
+            })
+
+            .then(student => {
+                var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+                var firstDate = new Date();
+                
+                var subjects = student.paid_subjects;
+                for (var i = 0; i < subjects.length; i++) {
+                    subjects[i].remain_date = 365 -  Math.round(Math.abs((firstDate.getTime() - subjects[i].date.getTime()) / (oneDay)));    
+                }
+                resolve(student);
+            })
 
             .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 
@@ -111,7 +139,8 @@ module.exports.purchaseSuccess = (user_id, course_number, level_number, subject_
                 student.paid_subjects.push({
                     course_number: course_number,
                     level_number: level_number,
-                    subject_number: subject_number
+                    subject_number: subject_number,
+                    date: new Date()
                 });
 
                 student.save();
