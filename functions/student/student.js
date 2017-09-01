@@ -37,10 +37,10 @@ module.exports.getStudent = (user_id) =>
             .then(student => {
                 var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
                 var firstDate = new Date();
-                
+
                 var subjects = student.paid_subjects;
                 for (var i = 0; i < subjects.length; i++) {
-                    subjects[i].remain_date = 365 -  Math.round(Math.abs((firstDate.getTime() - subjects[i].date.getTime()) / (oneDay)));    
+                    subjects[i].remain_date = 365 -  Math.round(Math.abs((firstDate.getTime() - subjects[i].date.getTime()) / (oneDay)));
                 }
                 resolve(student);
             })
@@ -76,7 +76,7 @@ module.exports.getCheckoutID = (user_id, price) =>
                     'shipping.state': 'Gauteng',
                     'shipping.postcode': '2000',
                     'shipping.country': 'ZA',
-                    'shopperResultUrl': 'com.snowsea.school.payments://shopper_result',
+                    'shopperResultUrl': 'com.snowsea.accountingtutors.payments://shopper_result',
                     'notificationUrl': 'https://tshiamo.herokuapp.com/api/students/checkout/notification'
                 });
                 var options = {
@@ -102,7 +102,7 @@ module.exports.getCheckoutID = (user_id, price) =>
             .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 
     });
-        
+
 
 module.exports.getCheckoutStatus = (id) =>
     new Promise((resolve, reject) => {
@@ -145,7 +145,7 @@ module.exports.purchaseSuccess = (user_id, course_number, level_number, subject_
 
                 student.save();
             })
-        
+
             .then((student) => resolve({ status: 200, message: 'Paid successfully' }))
 
             .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
