@@ -106,6 +106,7 @@ module.exports.getCheckoutID = (user_id, price) =>
 
 module.exports.getCheckoutStatus = (id) =>
     new Promise((resolve, reject) => {
+        var result = '';
         var path = '/v1/checkouts/' + id + '/payment';
         path += '?authentication.userId=' + config.payment_user_id
         path += '&authentication.password=' + config.payment_password
@@ -119,8 +120,13 @@ module.exports.getCheckoutStatus = (id) =>
         var postRequest = http.request(options, function (res) {
             res.setEncoding('utf8');
             res.on('data', function (chunk) {
-                const jsonRes = JSON.parse(chunk);
-                resolve(jsonRes.result);
+                result += chunk;
+            });
+
+            res.on('end', function () {
+              const jsonRes = JSON.parse(result);
+              resolve(jsonRes.result);
+              // your code here if you want to use the results !
             });
         });
         postRequest.end();
