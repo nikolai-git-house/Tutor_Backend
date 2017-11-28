@@ -1,10 +1,10 @@
 ﻿'use strict';
 
 const user = require('../../models/user');
-const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt-nodejs');
 const randomstring = require("randomstring");
-const config = require('../config/config.json');
+const config = require('../../config/config.json');
+const nodemailer = require('nodemailer');
 
 exports.changePassword = (email, password, newPassword) =>
 
@@ -50,7 +50,7 @@ exports.resetPasswordInit = email =>
 
                 if (users.length == 0) {
 
-                    reject({ status: 404, message: 'User Not Found !' });
+                    throw reject({ status: 404, message: 'User Not Found !' });
 
                 } else {
 
@@ -68,46 +68,44 @@ exports.resetPasswordInit = email =>
 
             .then(user => {
 
-                const transporter = nodemailer.createTransport(`smtps://${config.email}:${config.password}@smtp.gmail.com`);
-
+                const transporter = nodemailer.createTransport({
+                    host: 'vegeta.aserv.co.za',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: config.email_username,
+                        pass: config.email_password
+                    }
+                });
+                
                 const mailOptions = {
-
-                    from: `"${config.name}" <${config.email}>`,
-                    to: email,
-                    subject: 'Reset Password Request ',
-                    html: `Hello ${user.name},
- 
-                     Your reset password token is <b>${random}</b>. 
-                If you are viewing this mail from a Android Device click this <a href="http://learn2crack/${random}">link</a>. 
-                The token is valid for only 2 minutes.
- 
-                Thanks,
-                Learn2Crack.`
-
+    
+                    from: config.email_username,
+                    to: email,  
+                    subject: 'Reset Password Request ', 
+                    html: `Hello ${user.user_info.first_name},
+                            Your reset password code is <b>${random}</b>. 
+                    <br/ >
+                    <br/ >
+                    Thanks.`
                 };
-
+    
                 return transporter.sendMail(mailOptions);
-
             })
 
             .then(info => {
-
-                console.log(info);
                 resolve({ status: 200, message: 'Check mail for instructions' })
             })
 
             .catch(err => {
-
-                console.log(err);
                 reject({ status: 500, message: 'Internal Server Error !' });
-
             });
     });
 
-exports.resetPasswordFinish = (email, token, password) =>
+exports.resetPasswordFinish = (email, code, password) =>
 
     new Promise((resolve, reject) => {
-
+        console.log(email, code, password, 'SNOWSNOW')
         user.find({ email: email })
 
             .then(users => {
@@ -118,10 +116,11 @@ exports.resetPasswordFinish = (email, token, password) =>
                 const seconds = Math.floor(diff / 1000);
                 console.log(`Seconds : ${seconds}`);
 
-                if (seconds < 120) { return user; } else { reject({ status: 401, message: 'Time Out ! Try again' }); }
+                if (seconds < 300) { return user; } else { reject({ status: 401, message: 'Time Out ! Try again' }); }
             }).then(user => {
-
-                if (bcrypt.compareSync(token, user.temp_password)) {
+                
+                if (bcrypt.compareSync(code, user.temp_password)) {
+                    console.log(email, password)
 
                     const salt = bcrypt.genSaltSync(10);
                     const hash = bcrypt.hashSync(password, salt);
@@ -133,7 +132,7 @@ exports.resetPasswordFinish = (email, token, password) =>
 
                 } else {
 
-                    reject({ status: 401, message: 'Invalid Token !' });
+                    reject({ status: 401, message: 'Invalid Code !' });
                 }
             })
 

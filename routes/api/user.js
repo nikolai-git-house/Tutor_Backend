@@ -7,6 +7,7 @@ const login = require('../../functions/user/login');
 const config = require('../../config/config.json');
 const helper = require('../../helpers/user');
 const user = require('../../functions/user/user');
+const password = require('../../functions/user/password');
 
 var router = express.Router();
 
@@ -172,10 +173,10 @@ router.put('/:id', (req, res) => {
 router.post('/:id/password', (req, res) => {
 
     const email = req.params.id;
-    const token = req.body.token;
+    const code = req.body.code;
     const newPassword = req.body.password;
 
-    if (!token || !newPassword || !token.trim() || !newPassword.trim()) {
+    if (!code || !newPassword) {
 
         password.resetPasswordInit(email)
 
@@ -185,7 +186,7 @@ router.post('/:id/password', (req, res) => {
 
     } else {
 
-        password.resetPasswordFinish(email, token, newPassword)
+        password.resetPasswordFinish(email, code, newPassword)
 
             .then(result => res.status(result.status).json({ message: result.message }))
 

@@ -527,7 +527,6 @@ app.controller("levelsController", function ($scope, $http, dataService) {
     }
 
     $scope.newLevel = function() {
-			console.log($scope.levels.length);
       $scope.input = {
 				number: $scope.levels.length
 			};

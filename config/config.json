@@ -1,9 +1,10 @@
 ﻿{
   "name": "SnowSea",
-  "email": "snowsea.dream@gmail.com",
   "password": "qnrenclftjd55",
   "secret": "SnowSea_Credential",
   "payment_user_id": "8a8394c55c354926015c5e397856320f",
   "payment_password": "B8dPfMg6tR",
-  "payment_entity_id": "8a8394c55c354926015c5e44369b32f4"
+  "payment_entity_id": "8a8394c55c354926015c5e44369b32f4",
+  "email_username": "app-support@imas-sa.co.za",
+  "email_password": "AppSupport99"
 }
